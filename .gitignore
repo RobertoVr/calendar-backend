@@ -3,6 +3,5 @@
 .env
 .env.test
 .env*.local
-
 # Dependency directories
 node_modules/
