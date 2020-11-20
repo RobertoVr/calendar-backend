@@ -1,9 +1,13 @@
 const express = require('express');
+const { dbConnection } = require('./database/dbConfig');
 const routes = require('./routes');
 require('./config/config');
 
 // crear el servidor de express
 const app = express();
+
+//Base de datos
+dbConnection();
 
 // directorio publico
 app.use(express.static('public'));
