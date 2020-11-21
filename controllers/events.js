@@ -44,14 +44,14 @@ const actualizarEvento = async (req, resp = response) => {
     try {
         const evento = await Evento.findById(id);
         if (!evento) {
-            resp.status(404).send(
+            return resp.status(404).send(
                 {
                     ok: false,
                     msg: 'El evento no exite con ese id'
                 }
             )
         }
-        
+
         if (evento.user.toString() !== uid) {
             return resp.status(401).send(
                 {
@@ -85,16 +85,49 @@ const actualizarEvento = async (req, resp = response) => {
     }
 }
 
-const eliminarEvento = (req, resp = response) => {
-    const { id = 't' } = req.params;
-    resp.send(
-        {
-            ok: true,
-            msg: 'Eliminar eventos' + id
-        }
-    );
-}
+const eliminarEvento = async (req, resp = response) => {
+    const { id } = req.params;
+    const { uid } = req;
 
+    try {
+        const evento = await Evento.findById(id);
+        if (!evento) {
+            return resp.status(404).send(
+                {
+                    ok: false,
+                    msg: 'El evento no exite con ese id'
+                }
+            );
+        }
+
+        if (evento.user.toString() !== uid) {
+            return resp.status(401).send(
+                {
+                    ok: false,
+                    msg: 'No tienes permisos para eliminar el evento'
+                }
+            );
+        }
+
+        const eventoActualizado = await Evento.findByIdAndDelete(id);
+
+        resp.status(200).send(
+            {
+                ok: true,
+                evento: eventoActualizado
+            }
+        );
+
+    } catch (error) {
+        console.log(error);
+        resp.status(500).send(
+            {
+                ok: false,
+                msg: 'Hable con el Admin'
+            }
+        );
+    }
+}
 
 module.exports = {
     getEventos,
