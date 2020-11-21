@@ -24,5 +24,5 @@ app.use('/api', routes);
 
 // escuchar peticiones
 app.listen(process.env.PORT || 8080, () => {
-    console.log('Servidor corriendo en el puerto: ' + 4000);
+    console.log('Servidor corriendo en el puerto: ' + process.env.PORT);
 })
